@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./infrastructure/Dockerfile
+    ports:
+      - 8070:8000
+    depends_on:
+      - redis
+      - rabbitmq
+  redis:
+    image: redis:7.2.3-alpine
+    networks:
+      - usermanagement_network
+    volumes:
+      - redis_data:/data
+  rabbitmq:
+    image: rabbitmq:4.0.4-management
+    ports:
+      - "56721:5672"
+      - "15671:15672"  # UI RabbitMQ Management Console
+    networks:
+      - usermanagement_network
+
+networks:
+  app_network:
+volumes:
+  app_data:
+  db_data:
+  redis_data:
