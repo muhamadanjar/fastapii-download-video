@@ -11,16 +11,15 @@ async def download_video_endpoint(request: Request):
     body = await request.json()
     print(body)
     video_url = body.get('video_url')
+    print("video url", video_url)
     supported_platforms = ['youtube.com', 'instagram.com', 'linkedin.com']
     if not any(platform in video_url for platform in supported_platforms):
         raise HTTPException(status_code=400, detail="URL tidak didukung.")
     try: 
-        task = download_video.delay(video_url)
+        task = download_video.apply_async(args=[video_url],)
         return {"task_id": task.id, "message": "Pengunduhan dimulai."}
     except Exception as e:
         print(e)    
-
-
 
 
 @app.get("/progress/{task_id}")

@@ -9,6 +9,7 @@ services:
       - rabbitmq
     volumes:
       - ./downloads:/apps/downloads
+      - ./app:/apps/app
     networks:
       - app_network
   celery_worker:
@@ -30,6 +31,9 @@ services:
       - "15671:15672"  # UI RabbitMQ Management Console
     networks:
       - app_network
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
 
 networks:
   app_network:
